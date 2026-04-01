@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">小龙虾记事本 🦞</string>
+    <style name="Theme.CrayfishNotes" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="colorPrimary">#FF5733</item>
+        <item name="colorPrimaryDark">#E64A19</item>
+        <item name="colorAccent">#FF5733</item>
+    </style>
+</resources>
