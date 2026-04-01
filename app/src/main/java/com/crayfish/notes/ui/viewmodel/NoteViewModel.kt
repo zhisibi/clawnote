@@ -13,7 +13,8 @@ import javax.inject.Inject
 
 data class NoteListState(
     val groupedNotes: Map<String, List<Note>> = emptyMap(),
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val pendingDeleteId: String? = null
 )
 
 @HiltViewModel
@@ -28,6 +29,21 @@ class NoteViewModel @Inject constructor(
 
     init {
         loadNotes()
+    }
+
+    fun onNoteLongClick(noteId: String) {
+        _state.update { it.copy(pendingDeleteId = noteId) }
+    }
+
+    suspend fun deletePendingNote() {
+        val id = _state.value.pendingDeleteId ?: return
+        val entity = noteDao.getNoteById(id) ?: return
+        noteDao.deleteNote(entity)
+        _state.update { it.copy(pendingDeleteId = null) }
+    }
+
+    fun clearPendingDelete() {
+        _state.update { it.copy(pendingDeleteId = null) }
     }
 
     private fun loadNotes() {

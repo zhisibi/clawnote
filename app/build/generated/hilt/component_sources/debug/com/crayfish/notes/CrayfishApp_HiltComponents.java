@@ -3,6 +3,7 @@ package com.crayfish.notes;
 import com.crayfish.notes.di.DatabaseModule;
 import com.crayfish.notes.ui.viewmodel.NoteEditorViewModel_HiltModules;
 import com.crayfish.notes.ui.viewmodel.NoteViewModel_HiltModules;
+import com.crayfish.notes.ui.viewmodel.SettingsViewModel_HiltModules;
 import dagger.Binds;
 import dagger.Component;
 import dagger.Module;
@@ -159,7 +160,8 @@ public final class CrayfishApp_HiltComponents {
           HiltWrapper_ActivityRetainedComponentManager_LifecycleModule.class,
           HiltWrapper_SavedStateHandleModule.class,
           NoteEditorViewModel_HiltModules.KeyModule.class,
-          NoteViewModel_HiltModules.KeyModule.class
+          NoteViewModel_HiltModules.KeyModule.class,
+          SettingsViewModel_HiltModules.KeyModule.class
       }
   )
   @ActivityRetainedScoped
@@ -197,7 +199,8 @@ public final class CrayfishApp_HiltComponents {
       modules = {
           HiltWrapper_HiltViewModelFactory_ViewModelModule.class,
           NoteEditorViewModel_HiltModules.BindsModule.class,
-          NoteViewModel_HiltModules.BindsModule.class
+          NoteViewModel_HiltModules.BindsModule.class,
+          SettingsViewModel_HiltModules.BindsModule.class
       }
   )
   @ViewModelScoped

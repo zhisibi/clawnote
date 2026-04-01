@@ -14,6 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.crayfish.notes.ui.screens.NoteEditorScreen
 import com.crayfish.notes.ui.screens.TimelineScreen
+import com.crayfish.notes.ui.screens.SettingsScreen
 import com.crayfish.notes.ui.theme.CrayfishNotesTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -58,6 +59,12 @@ fun AppNavigation() {
             }
             NoteEditorScreen(
                 viewModel = editorViewModel,
+                onBack = { navController.popBackStack() }
+            )
+        }
+        composable("settings") {
+            SettingsScreen(
+                viewModel = hiltViewModel(),
                 onBack = { navController.popBackStack() }
             )
         }

@@ -54,10 +54,11 @@ object DatabaseModule {
         @ApplicationContext context: Context
     ): SyncUseCase {
         val gitRepoDir = File(context.filesDir, "git_repo")
-        // 这里的 remoteUrl 实际应从配置中读取
+        // TODO: 后续可从 DataStore 或设置中读取 remoteUrl
+        val defaultRemote = "git@github.com:zhisibi/clawnote-notes.git"
         val gitRepoManager = GitRepositoryManager(
             localPath = gitRepoDir,
-            remoteUrl = "git@github.com:your_user/your_private_repo.git",
+            remoteUrl = defaultRemote,
             privateKeyPath = gitAuthManager.getPrivateKeyPath()
         )
         return SyncUseCase(gitRepoManager, gitSyncManager)

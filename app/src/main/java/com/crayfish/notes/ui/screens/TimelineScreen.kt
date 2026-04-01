@@ -10,9 +10,11 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -29,6 +31,30 @@ fun TimelineScreen(
     onNewNoteClick: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
+
+    val scope = rememberCoroutineScope()
+
+    if (state.pendingDeleteId != null) {
+        AlertDialog(
+            onDismissRequest = { viewModel.clearPendingDelete() },
+            title = { Text("删除笔记") },
+            text = { Text("确定要删除这条笔记吗？此操作不可恢复。") },
+            confirmButton = {
+                TextButton(onClick = {
+                    scope.launch {
+                        viewModel.deletePendingNote()
+                    }
+                }) {
+                    Text("删除")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { viewModel.clearPendingDelete() }) {
+                    Text("取消")
+                }
+            }
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -78,7 +104,13 @@ fun TimelineScreen(
                     }
 
                     items(notes) { note ->
-                        NoteCard(note = note, onClick = { onNoteClick(note.id) })
+                        NoteCard(
+                            note = note,
+                            onClick = { onNoteClick(note.id) },
+                            onLongClick = {
+                                viewModel.onNoteLongClick(note.id)
+                            }
+                        )
                     }
                 }
             }

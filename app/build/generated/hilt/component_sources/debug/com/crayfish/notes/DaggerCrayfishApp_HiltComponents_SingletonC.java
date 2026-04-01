@@ -8,12 +8,20 @@ import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
 import com.crayfish.notes.data.local.AppDatabase;
 import com.crayfish.notes.data.local.dao.NoteDao;
+import com.crayfish.notes.data.sync.GitAuthManager;
+import com.crayfish.notes.data.sync.GitSyncManager;
 import com.crayfish.notes.di.DatabaseModule_ProvideDatabaseFactory;
+import com.crayfish.notes.di.DatabaseModule_ProvideGitAuthManagerFactory;
+import com.crayfish.notes.di.DatabaseModule_ProvideGitSyncManagerFactory;
 import com.crayfish.notes.di.DatabaseModule_ProvideNoteDaoFactory;
+import com.crayfish.notes.di.DatabaseModule_ProvideSyncUseCaseFactory;
+import com.crayfish.notes.domain.usecase.SyncUseCase;
 import com.crayfish.notes.ui.viewmodel.NoteEditorViewModel;
 import com.crayfish.notes.ui.viewmodel.NoteEditorViewModel_HiltModules;
 import com.crayfish.notes.ui.viewmodel.NoteViewModel;
 import com.crayfish.notes.ui.viewmodel.NoteViewModel_HiltModules;
+import com.crayfish.notes.ui.viewmodel.SettingsViewModel;
+import com.crayfish.notes.ui.viewmodel.SettingsViewModel_HiltModules;
 import dagger.hilt.android.ActivityRetainedLifecycle;
 import dagger.hilt.android.ViewModelLifecycle;
 import dagger.hilt.android.internal.builders.ActivityComponentBuilder;
@@ -375,7 +383,7 @@ public final class DaggerCrayfishApp_HiltComponents_SingletonC {
 
     @Override
     public Map<Class<?>, Boolean> getViewModelKeys() {
-      return LazyClassKeyMap.<Boolean>of(MapBuilder.<String, Boolean>newMapBuilder(2).put(LazyClassKeyProvider.com_crayfish_notes_ui_viewmodel_NoteEditorViewModel, NoteEditorViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_crayfish_notes_ui_viewmodel_NoteViewModel, NoteViewModel_HiltModules.KeyModule.provide()).build());
+      return LazyClassKeyMap.<Boolean>of(MapBuilder.<String, Boolean>newMapBuilder(3).put(LazyClassKeyProvider.com_crayfish_notes_ui_viewmodel_NoteEditorViewModel, NoteEditorViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_crayfish_notes_ui_viewmodel_NoteViewModel, NoteViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_crayfish_notes_ui_viewmodel_SettingsViewModel, SettingsViewModel_HiltModules.KeyModule.provide()).build());
     }
 
     @Override
@@ -395,15 +403,20 @@ public final class DaggerCrayfishApp_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_crayfish_notes_ui_viewmodel_NoteViewModel = "com.crayfish.notes.ui.viewmodel.NoteViewModel";
-
       static String com_crayfish_notes_ui_viewmodel_NoteEditorViewModel = "com.crayfish.notes.ui.viewmodel.NoteEditorViewModel";
 
-      @KeepFieldType
-      NoteViewModel com_crayfish_notes_ui_viewmodel_NoteViewModel2;
+      static String com_crayfish_notes_ui_viewmodel_SettingsViewModel = "com.crayfish.notes.ui.viewmodel.SettingsViewModel";
+
+      static String com_crayfish_notes_ui_viewmodel_NoteViewModel = "com.crayfish.notes.ui.viewmodel.NoteViewModel";
 
       @KeepFieldType
       NoteEditorViewModel com_crayfish_notes_ui_viewmodel_NoteEditorViewModel2;
+
+      @KeepFieldType
+      SettingsViewModel com_crayfish_notes_ui_viewmodel_SettingsViewModel2;
+
+      @KeepFieldType
+      NoteViewModel com_crayfish_notes_ui_viewmodel_NoteViewModel2;
     }
   }
 
@@ -417,6 +430,8 @@ public final class DaggerCrayfishApp_HiltComponents_SingletonC {
     private Provider<NoteEditorViewModel> noteEditorViewModelProvider;
 
     private Provider<NoteViewModel> noteViewModelProvider;
+
+    private Provider<SettingsViewModel> settingsViewModelProvider;
 
     private ViewModelCImpl(SingletonCImpl singletonCImpl,
         ActivityRetainedCImpl activityRetainedCImpl, SavedStateHandle savedStateHandleParam,
@@ -433,11 +448,12 @@ public final class DaggerCrayfishApp_HiltComponents_SingletonC {
         final ViewModelLifecycle viewModelLifecycleParam) {
       this.noteEditorViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 0);
       this.noteViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 1);
+      this.settingsViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 2);
     }
 
     @Override
     public Map<Class<?>, javax.inject.Provider<ViewModel>> getHiltViewModelMap() {
-      return LazyClassKeyMap.<javax.inject.Provider<ViewModel>>of(MapBuilder.<String, javax.inject.Provider<ViewModel>>newMapBuilder(2).put(LazyClassKeyProvider.com_crayfish_notes_ui_viewmodel_NoteEditorViewModel, ((Provider) noteEditorViewModelProvider)).put(LazyClassKeyProvider.com_crayfish_notes_ui_viewmodel_NoteViewModel, ((Provider) noteViewModelProvider)).build());
+      return LazyClassKeyMap.<javax.inject.Provider<ViewModel>>of(MapBuilder.<String, javax.inject.Provider<ViewModel>>newMapBuilder(3).put(LazyClassKeyProvider.com_crayfish_notes_ui_viewmodel_NoteEditorViewModel, ((Provider) noteEditorViewModelProvider)).put(LazyClassKeyProvider.com_crayfish_notes_ui_viewmodel_NoteViewModel, ((Provider) noteViewModelProvider)).put(LazyClassKeyProvider.com_crayfish_notes_ui_viewmodel_SettingsViewModel, ((Provider) settingsViewModelProvider)).build());
     }
 
     @Override
@@ -447,9 +463,14 @@ public final class DaggerCrayfishApp_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
+      static String com_crayfish_notes_ui_viewmodel_SettingsViewModel = "com.crayfish.notes.ui.viewmodel.SettingsViewModel";
+
       static String com_crayfish_notes_ui_viewmodel_NoteViewModel = "com.crayfish.notes.ui.viewmodel.NoteViewModel";
 
       static String com_crayfish_notes_ui_viewmodel_NoteEditorViewModel = "com.crayfish.notes.ui.viewmodel.NoteEditorViewModel";
+
+      @KeepFieldType
+      SettingsViewModel com_crayfish_notes_ui_viewmodel_SettingsViewModel2;
 
       @KeepFieldType
       NoteViewModel com_crayfish_notes_ui_viewmodel_NoteViewModel2;
@@ -484,6 +505,9 @@ public final class DaggerCrayfishApp_HiltComponents_SingletonC {
 
           case 1: // com.crayfish.notes.ui.viewmodel.NoteViewModel 
           return (T) new NoteViewModel(singletonCImpl.noteDao());
+
+          case 2: // com.crayfish.notes.ui.viewmodel.SettingsViewModel 
+          return (T) new SettingsViewModel(singletonCImpl.provideSyncUseCaseProvider.get(), singletonCImpl.provideGitAuthManagerProvider.get());
 
           default: throw new AssertionError(id);
         }
@@ -567,6 +591,12 @@ public final class DaggerCrayfishApp_HiltComponents_SingletonC {
 
     private Provider<AppDatabase> provideDatabaseProvider;
 
+    private Provider<GitAuthManager> provideGitAuthManagerProvider;
+
+    private Provider<GitSyncManager> provideGitSyncManagerProvider;
+
+    private Provider<SyncUseCase> provideSyncUseCaseProvider;
+
     private SingletonCImpl(ApplicationContextModule applicationContextModuleParam) {
       this.applicationContextModule = applicationContextModuleParam;
       initialize(applicationContextModuleParam);
@@ -580,6 +610,9 @@ public final class DaggerCrayfishApp_HiltComponents_SingletonC {
     @SuppressWarnings("unchecked")
     private void initialize(final ApplicationContextModule applicationContextModuleParam) {
       this.provideDatabaseProvider = DoubleCheck.provider(new SwitchingProvider<AppDatabase>(singletonCImpl, 0));
+      this.provideGitAuthManagerProvider = DoubleCheck.provider(new SwitchingProvider<GitAuthManager>(singletonCImpl, 2));
+      this.provideGitSyncManagerProvider = DoubleCheck.provider(new SwitchingProvider<GitSyncManager>(singletonCImpl, 3));
+      this.provideSyncUseCaseProvider = DoubleCheck.provider(new SwitchingProvider<SyncUseCase>(singletonCImpl, 1));
     }
 
     @Override
@@ -617,6 +650,15 @@ public final class DaggerCrayfishApp_HiltComponents_SingletonC {
         switch (id) {
           case 0: // com.crayfish.notes.data.local.AppDatabase 
           return (T) DatabaseModule_ProvideDatabaseFactory.provideDatabase(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+
+          case 1: // com.crayfish.notes.domain.usecase.SyncUseCase 
+          return (T) DatabaseModule_ProvideSyncUseCaseFactory.provideSyncUseCase(singletonCImpl.provideGitAuthManagerProvider.get(), singletonCImpl.provideGitSyncManagerProvider.get(), ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+
+          case 2: // com.crayfish.notes.data.sync.GitAuthManager 
+          return (T) DatabaseModule_ProvideGitAuthManagerFactory.provideGitAuthManager(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+
+          case 3: // com.crayfish.notes.data.sync.GitSyncManager 
+          return (T) DatabaseModule_ProvideGitSyncManagerFactory.provideGitSyncManager(singletonCImpl.noteDao(), ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
           default: throw new AssertionError(id);
         }
