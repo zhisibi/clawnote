@@ -57,6 +57,23 @@ fun SettingsScreen(viewModel: SettingsViewModel, onBack: () -> Unit) {
 
             Text("最后同步时间：${state.lastSyncTime}")
 
+            // UI 字体大小设置
+            Text("界面字体缩放", fontWeight = FontWeight.Bold)
+            Slider(
+                value = state.uiFontScale,
+                onValueChange = { viewModel.onUiFontScaleChange(it) },
+                valueRange = 0.8f..1.4f,
+                steps = 3
+            )
+
+            Text("笔记字体缩放", fontWeight = FontWeight.Bold)
+            Slider(
+                value = state.noteFontScale,
+                onValueChange = { viewModel.onNoteFontScaleChange(it) },
+                valueRange = 0.8f..1.6f,
+                steps = 4
+            )
+
             if (state.errorMessage != null) {
                 Text(
                     text = "同步失败：${state.errorMessage}",

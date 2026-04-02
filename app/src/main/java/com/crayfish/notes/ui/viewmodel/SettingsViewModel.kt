@@ -18,7 +18,9 @@ data class SettingsState(
     val lastSyncTime: String = "尚未同步",
     val isSyncing: Boolean = false,
     val errorMessage: String? = null,
-    val publicKey: String? = null
+    val publicKey: String? = null,
+    val uiFontScale: Float = 1.0f,
+    val noteFontScale: Float = 1.0f
 )
 
 @HiltViewModel
@@ -32,13 +34,17 @@ class SettingsViewModel @Inject constructor(
     val state: StateFlow<SettingsState> = _state.asStateFlow()
 
     init {
-        // 读取已有公钥和 remoteUrl
+        // 读取已有公钥、remoteUrl 和字体缩放
         val defaultRemote = "git@github.com:zhisibi/clawnote-notes.git"
         val savedRemote = gitConfigManager.getRemoteUrl(defaultRemote)
+        val uiScale = gitConfigManager.getUiFontScale()
+        val noteScale = gitConfigManager.getNoteFontScale()
         _state.update { state ->
             state.copy(
                 publicKey = gitAuthManager.getPublicKey(),
-                remoteUrl = savedRemote
+                remoteUrl = savedRemote,
+                uiFontScale = uiScale,
+                noteFontScale = noteScale
             )
         }
     }
@@ -46,6 +52,16 @@ class SettingsViewModel @Inject constructor(
     fun onRemoteUrlChange(url: String) {
         _state.update { it.copy(remoteUrl = url) }
         gitConfigManager.setRemoteUrl(url)
+    }
+
+    fun onUiFontScaleChange(scale: Float) {
+        _state.update { it.copy(uiFontScale = scale) }
+        gitConfigManager.setUiFontScale(scale)
+    }
+
+    fun onNoteFontScaleChange(scale: Float) {
+        _state.update { it.copy(noteFontScale = scale) }
+        gitConfigManager.setNoteFontScale(scale)
     }
 
     fun syncNow() {
