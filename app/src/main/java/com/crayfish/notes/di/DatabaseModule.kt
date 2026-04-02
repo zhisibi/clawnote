@@ -71,4 +71,4 @@ object DatabaseModule {
         )
         return SyncUseCase(gitRepoManager, gitSyncManager)
     }
-}}
+}
