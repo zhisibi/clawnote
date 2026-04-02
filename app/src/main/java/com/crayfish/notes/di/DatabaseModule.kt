@@ -7,6 +7,7 @@ import com.crayfish.notes.data.local.dao.NoteDao
 import com.crayfish.notes.data.sync.GitAuthManager
 import com.crayfish.notes.data.sync.GitRepositoryManager
 import com.crayfish.notes.data.sync.GitSyncManager
+import com.crayfish.notes.data.sync.GitConfigManager
 import com.crayfish.notes.domain.usecase.SyncUseCase
 import dagger.Module
 import dagger.Provides
@@ -48,19 +49,26 @@ object DatabaseModule {
 
     @Provides
     @Singleton
+    fun provideGitConfigManager(@ApplicationContext context: Context): GitConfigManager {
+        return GitConfigManager(context)
+    }
+
+    @Provides
+    @Singleton
     fun provideSyncUseCase(
         gitAuthManager: GitAuthManager,
         gitSyncManager: GitSyncManager,
+        gitConfigManager: GitConfigManager,
         @ApplicationContext context: Context
     ): SyncUseCase {
         val gitRepoDir = File(context.filesDir, "git_repo")
-        // TODO: 后续可从 DataStore 或设置中读取 remoteUrl
         val defaultRemote = "git@github.com:zhisibi/clawnote-notes.git"
+        val remoteUrl = gitConfigManager.getRemoteUrl(defaultRemote)
         val gitRepoManager = GitRepositoryManager(
             localPath = gitRepoDir,
-            remoteUrl = defaultRemote,
+            remoteUrl = remoteUrl,
             privateKeyPath = gitAuthManager.getPrivateKeyPath()
         )
         return SyncUseCase(gitRepoManager, gitSyncManager)
     }
-}
+}}

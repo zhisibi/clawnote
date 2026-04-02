@@ -24,7 +24,8 @@ fun NoteCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp)
+            // 列表高度和间距整体压缩一点
+            .padding(vertical = 2.dp)
             .combinedClickable(
                 onClick = onClick,
                 onLongClick = onLongClick
@@ -34,7 +35,7 @@ fun NoteCard(
         Column(
             modifier = Modifier
                 .background(Color(android.graphics.Color.parseColor(note.bgColor)))
-                .padding(16.dp)
+                .padding(10.dp)
         ) {
             Text(
                 text = note.title,

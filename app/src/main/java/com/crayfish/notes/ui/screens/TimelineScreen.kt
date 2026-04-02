@@ -58,7 +58,14 @@ fun TimelineScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("小龙虾记事本 🦞") })
+            TopAppBar(
+                title = { Text("小龙虾记事本 🦞") },
+                actions = {
+                    TextButton(onClick = { /* TODO: 导航到 settings，UI 层补入口时使用 */ }) {
+                        Text("同步")
+                    }
+                }
+            )
         },
         floatingActionButton = {
             FloatingActionButton(onClick = onNewNoteClick) {
@@ -85,7 +92,8 @@ fun TimelineScreen(
         } else {
             LazyColumn(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.66f)
                     .padding(padding)
                     .padding(horizontal = 16.dp)
             ) {

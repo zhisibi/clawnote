@@ -3,6 +3,7 @@ package com.crayfish.notes.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crayfish.notes.data.sync.GitAuthManager
+import com.crayfish.notes.data.sync.GitConfigManager
 import com.crayfish.notes.domain.usecase.SyncUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,19 +24,28 @@ data class SettingsState(
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val syncUseCase: SyncUseCase,
-    private val gitAuthManager: GitAuthManager
+    private val gitAuthManager: GitAuthManager,
+    private val gitConfigManager: GitConfigManager
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SettingsState())
     val state: StateFlow<SettingsState> = _state.asStateFlow()
 
     init {
-        // 读取已有公钥
-        _state.update { it.copy(publicKey = gitAuthManager.getPublicKey()) }
+        // 读取已有公钥和 remoteUrl
+        val defaultRemote = "git@github.com:zhisibi/clawnote-notes.git"
+        val savedRemote = gitConfigManager.getRemoteUrl(defaultRemote)
+        _state.update { state ->
+            state.copy(
+                publicKey = gitAuthManager.getPublicKey(),
+                remoteUrl = savedRemote
+            )
+        }
     }
 
     fun onRemoteUrlChange(url: String) {
         _state.update { it.copy(remoteUrl = url) }
+        gitConfigManager.setRemoteUrl(url)
     }
 
     fun syncNow() {

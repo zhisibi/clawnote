@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import com.crayfish.notes.ui.components.MarkdownToolbar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
@@ -103,6 +104,13 @@ fun NoteEditorScreen(viewModel: NoteEditorViewModel, onBack: () -> Unit) {
             }
 
             Spacer(modifier = Modifier.height(16.dp))
+
+            // Markdown 快捷菜单
+            MarkdownToolbar(onAction = { snippet ->
+                viewModel.insertSnippet(snippet)
+            })
+
+            Spacer(modifier = Modifier.height(8.dp))
 
             if (!state.isPreviewMode) {
                 // 编辑模式：多行 Markdown 文本框
